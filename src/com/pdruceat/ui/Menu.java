@@ -20,7 +20,7 @@ public class Menu {
 			System.out.println("\t5. Cargar zapatillas");
 			System.out.println("\t6. Guardar zapatillas");
 			System.out.println("\t0. Salir");
-			System.out.print("\n\tOpcion ->");
+			System.out.print("\n\tOpcion -> ");
 			try {
 			int opcion = keyboard.nextInt();
 			switch(opcion) {

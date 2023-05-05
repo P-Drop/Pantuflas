@@ -11,8 +11,6 @@ public class App {
 
 	ArrayList<Sneaker> misZ = new ArrayList<>();
 	Scanner keyboard = new Scanner(System.in);
-	BufferedWriter ficheroGuardar = null;
-	BufferedReader ficheroCargar = null;
 	Sneaker s = new Sneaker();
 	
 	
@@ -44,6 +42,7 @@ public class App {
 	}
 	public void editZ() throws InputMismatchException, Exception{
 		boolean existeID = false;
+		if (misZ.size() != 0) {
 		Iterator <Sneaker> snkIte = misZ.iterator();
 		showZ();
 		System.out.print("\nIntroduce el ID de la zapatilla que quieres editar -> ");
@@ -73,10 +72,15 @@ public class App {
 		}
 		else {
 			System.out.println("\nSE HA ACTUALIZADO EL MODELO\n");
-		}	
+		}
+		}
+		else {
+			System.out.println("\nNo hay zapatillas weii\n");
+		}
 	}
 	public void delZ() throws InputMismatchException, Exception{
 		boolean existeID = false;
+		if (misZ.size() != 0) {
 		Iterator <Sneaker> snkIte = misZ.iterator();
 		showZ();
 		System.out.print("\nIntroduce el ID de la zapatilla que quieres eliminar -> ");
@@ -98,15 +102,19 @@ public class App {
 		else {
 		System.out.println("\nSE HA ELIMINADO EL MODELO\n");
 		}
+		}
+		else {
+			System.out.println("\nNo hay zapatillas weii\n");
+		}
 	}
 	public void cargar() throws InputMismatchException, Exception{
 		System.out.println("\nSe van a cargar los datos del archivo datos.txt...¿Continuar? (y/n)");
 		String continuar = keyboard.next();
 		if(continuar.equals("y")) {
-			try {
-				ficheroCargar = new BufferedReader(new FileReader("datos.txt"));
+			try (BufferedReader ficheroCargar = new BufferedReader(new FileReader("datos.txt"))){
 				String[] datosOb = null;
 				String linea = ficheroCargar.readLine();
+				s.actualizarContador(misZ.size());
 				while(linea != null) {
 					datosOb = linea.split(";");
 					Sneaker snk = new Sneaker(datosOb[1], datosOb[2], Double.parseDouble(datosOb[3]), Integer.parseInt(datosOb[4]));
@@ -118,21 +126,11 @@ public class App {
 			catch (IOException e) {
 				System.err.println("Error -> "+ e.getMessage());
 			}
-			finally {
-				if(ficheroCargar != null) {
-					try {
-						ficheroCargar.close();
-					}
-					catch (IOException e) {
-						System.err.println("Error -> "+e.getMessage());
-					}
-				}
-			}
 		}
 	}
 	public void guardar() throws Exception{
-		try {
-			ficheroGuardar = new BufferedWriter(new FileWriter("datos.txt"));
+		if(misZ.size() != 0) {
+		try (BufferedWriter ficheroGuardar = new BufferedWriter(new FileWriter("datos.txt"))){
 			for (Sneaker sneaker : misZ) {
 				String datosSneaker = sneaker.getiD() +";"+ sneaker.getMarca() +";"+ sneaker.getModelo() +";"+ sneaker.getPrecio() +";"+ sneaker.getAnioF();
 				ficheroGuardar.write(datosSneaker);
@@ -143,15 +141,9 @@ public class App {
 		catch (IOException e) {
 			System.err.println("Error -> " + e.getMessage());
 		}
-		finally {
-			if(ficheroGuardar != null) {
-				try {
-					ficheroGuardar.close();
-				}
-				catch (IOException e) {
-					System.err.println("Error -> "+ e.getMessage());
-				}
-			}
+		}
+		else {
+			System.out.println("\nNo hay zapatillas weii\n");
 		}
 	}
 }
